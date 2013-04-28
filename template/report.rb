@@ -1,22 +1,44 @@
 class Report
-  def initialize
-    @title = 'Monthly Report'
-    @text  = [ 'Good', 'The Best' ]
+  attr_reader :format
+
+  def initialize(format)
+    @title  = 'Monthly Report'
+    @text   = [ 'Good', 'The Best' ]
+    @format = format
   end
 
   def output_report
-    puts '<html>'
-    puts '  <head>'
-    puts "  <title>#{@title}</title>"
-    puts '  </head>'
-    puts '  <body>'
-    @text.each do |line|
-      puts "  <p>#{line}</p>"
+    format = self.format.to_sym
+
+    case format
+    when :plain
+      puts "*** #{@title} ***"
+    when :html
+      puts '<html>'
+      puts '  <head>'
+      puts "  <title>#{@title}</title>"
+      puts '  </head>'
+      puts '  <body>'
+    else
+      raise "Unknown format: #{format}"
     end
-    puts '  </body>'
-    puts '</html>'
+
+    @text.each do |line|
+      case format
+      when :plain
+        puts line
+      else
+        puts "  <p>#{line}</p>"
+      end
+    end
+
+    case format
+    when :html
+      puts '  </body>'
+      puts '</html>'
+    end
   end
 end
 
-report = Report.new
+report = Report.new(ARGV[0])
 report.output_report
