@@ -12,13 +12,7 @@ class Report
   end
 end
 
-class Formatter
-  def output_report(context)
-    raise 'Abstract method called'
-  end
-end
-
-class HTMLFormatter < Formatter
+class HTMLFormatter
   def output_report(context)
     puts '<html>'
     puts '  <head>'
@@ -35,7 +29,7 @@ class HTMLFormatter < Formatter
   end
 end
 
-class PlainTextFormatter < Formatter
+class PlainTextFormatter
   def output_report(context)
     puts "***** #{context.title} *****"
 
