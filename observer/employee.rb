@@ -1,5 +1,3 @@
-require 'observer'
-
 class Payroll
   def update(changed_employee)
     puts "We will send a check to #{changed_employee.name}."
@@ -13,12 +11,33 @@ class TaxMan
   end
 end
 
+module Subject
+  def initialize
+    @observers = []
+  end
+
+  def add_observer(observer)
+    @observers << observer
+  end
+
+  def delete_observer(observer)
+    @observers.delete(observer)
+  end
+
+  def notify_observers
+    @observers.each do |observer|
+      observer.update(self)
+    end
+  end
+end
+
 class Employee
-  include Observable
+  include Subject
 
   attr_reader :name, :salary
 
   def initialize(name, title, salary)
+    super()
     @name   = name
     @title  = title
     @salary = salary
@@ -26,8 +45,7 @@ class Employee
 
   def salary=(new_salary)
     @salary = new_salary
-    changed
-    notify_observers(self)
+    notify_observers
   end
 end
 
