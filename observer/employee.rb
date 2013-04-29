@@ -1,32 +1,19 @@
-class Payroll
-  def update(changed_employee)
-    puts "We will send a check to #{changed_employee.name}."
-    puts "His / Her salary is #{changed_employee.salary}."
-  end
-end
-
-class TaxMan
-  def update(changed_employee)
-    puts "We will send a sales invoice sheet for new tax to #{changed_employee.name}."
-  end
-end
-
 module Subject
   def initialize
     @observers = []
   end
 
-  def add_observer(observer)
+  def add_observer(&observer)
     @observers << observer
   end
 
-  def delete_observer(observer)
+  def delete_observer(&observer)
     @observers.delete(observer)
   end
 
   def notify_observers
     @observers.each do |observer|
-      observer.update(self)
+      observer.call(self)
     end
   end
 end
@@ -51,10 +38,13 @@ end
 
 fred = Employee.new("Fred", "Crane Operator", 30000)
 
-payroll = Payroll.new
-fred.add_observer(payroll)
+fred.add_observer do |changed_employee|
+  puts "We will send a check to #{changed_employee.name}."
+  puts "His / Her salary is #{changed_employee.salary}."
+end
 
-tax_man = TaxMan.new
-fred.add_observer(tax_man)
+fred.add_observer do |changed_employee|
+  puts "We will send a sales invoice sheet for new tax to #{changed_employee.name}."
+end
 
 fred.salary = 35000
