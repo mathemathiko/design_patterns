@@ -5,6 +5,12 @@ class Payroll
   end
 end
 
+class TaxMan
+  def update(changed_employee)
+    puts "We will send a sales invoice sheet for new tax to #{changed_employee.name}."
+  end
+end
+
 class Employee
   attr_reader :name, :salary
 
@@ -39,5 +45,8 @@ fred = Employee.new("Fred", "Crane Operator", 30000)
 
 payroll = Payroll.new
 fred.add_observer(payroll)
+
+tax_man = TaxMan.new
+fred.add_observer(tax_man)
 
 fred.salary = 35000
